@@ -1,0 +1,39 @@
+name: Multi-Platform Matrix Build (9fcda85)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: Matrix Build for Node Versions
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: matrix-9fcda85
+        run: echo "Building for Node.js version ${{ matrix.node-version }}"
+
+      - name: Generate build artifact
+        run: |
+          echo "Build output for Node.js version ${{ matrix.node-version }}" > output-${{ matrix.node-version }}.txt
+          echo "Timestamp: $(date)" >> output-${{ matrix.node-version }}.txt
+          echo "Build successful!" >> output-${{ matrix.node-version }}.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-9fcda85-v${{ matrix.node-version }}
+          path: output-${{ matrix.node-version }}.txt
